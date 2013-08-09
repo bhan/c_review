@@ -46,7 +46,7 @@ void bst_destroy(struct bst* tree) {
   free(tree);
 }
 
-int bst_add(struct bst* tree, int data) {
+int bst_insert(struct bst* tree, int data) {
   assert(tree != NULL);
   // add root
   if (tree->size == 0) {
