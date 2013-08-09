@@ -1,6 +1,6 @@
 #include "common.h"
-#include "limits.h"
 #include <assert.h>
+#include <limits.h>
 #include <stdlib.h>
 
 // every bst will have data, left, right in same place
