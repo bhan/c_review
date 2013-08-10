@@ -91,3 +91,54 @@ int bst_search(struct bst *tree, int data) {
     }
     return 0;
 }
+
+int bst_remove(struct bst *tree, int data) {
+    assert(tree != NULL);
+
+    struct node **to_modify = &tree->root;
+    struct node *cur = tree->root;
+    while (cur != NULL) {
+        if (cur->data > data) {
+            to_modify = &cur->l;
+            cur = cur->l;
+        } else if (cur->data < data) {
+            to_modify = &cur->r;
+            cur = cur->r;
+        } else {
+            if (cur->l == NULL && cur->r == NULL) {
+                // leaf node
+                free(cur);
+                *to_modify = NULL;
+            } else if (cur->r == NULL) {
+                // only left subtree
+                *to_modify = cur->l;
+                free(cur);
+            } else {
+                // right subtree exists
+                /*                  10
+                 *          05------||------20
+                 *    00----||----08  15----||----25
+                 *     |--03  06--|
+                 */
+                // replace with the closest value larger than the node removed
+                // (arbitrary choice which one)
+                to_modify = &cur->r;
+                struct node* replace = cur->r;
+                // traverse to leftmost child
+                while (replace->l != NULL) {
+                    to_modify = &replace->l;
+                    replace = replace->l;
+                }
+
+                // replace cur's value with that of replace
+                cur->data = replace->data;
+
+                // free replace and update the pointer to it to NULL
+                free(replace);
+                *to_modify = NULL;
+            }
+            return 1;
+        }
+    }
+    return 0;
+}

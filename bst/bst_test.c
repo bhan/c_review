@@ -17,11 +17,21 @@ int main() {
       bst_insert(tree, values[i]);
       assert(bst_is_valid(tree));
   }
-  for (int i = 0; i < len_values; ++i) {
+
+  for (int i = 0; i < len_values; ++i)
       assert(bst_search(tree, values[i]));
-  }
-  for (int i = 0; i < len_notvalues; ++i) {
+
+  for (int i = 0; i < len_notvalues; ++i)
       assert(bst_search(tree, notvalues[i]) == 0);
+
+  for (int i = 0; i < len_values; ++i) {
+      assert(bst_remove(tree, values[i]));
+      assert(bst_is_valid(tree));
+  }
+
+  for (int i = 0; i < len_notvalues; ++i) {
+      assert(bst_remove(tree, notvalues[i]) == 0);
+      assert(bst_is_valid(tree));
   }
 
   bst_destroy(tree);
