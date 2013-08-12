@@ -22,3 +22,5 @@ struct edge *graph_edge_add(struct graph *g, struct vertex *from,
 void graph_edge_remove(struct graph *g, struct vertex *from,
                        struct vertex *to);
 int graph_edge_num(struct graph *g);
+
+void dijkstra(struct graph *g, struct vertex *src);

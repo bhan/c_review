@@ -255,3 +255,12 @@ int graph_edge_num(struct graph *g) {
     assert(g != NULL);
     return g->edges_num;
 }
+
+void dijkstra(struct graph *g, struct vertex *src) {
+    D printf("ENTER dijkstra g:%p src:%p\n", g, src);
+    D graph_print(g);
+
+    // set of unvisited nodes
+    // for each neighbor of src, add them to the unvisited set
+    D printf("EXIT dijkstra\n");
+}
