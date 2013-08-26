@@ -2,7 +2,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
-void swap(int *a, int *b) {
+static void
+swap(int *a, int *b) {
     int temp = *a;
     *a = *b;
     *b = temp;
@@ -27,6 +28,8 @@ bubblesort(int arr[], int len) {
 
 void
 insertionsort(int arr[], int len) {
+    assert(arr != NULL);
+    assert(len > 0);
     for (int i = 0; i < len-1; ++i) {
         int cur = i+1;
         for (int j = i; j >= 0; --j) {
@@ -42,6 +45,8 @@ insertionsort(int arr[], int len) {
 
 void
 selectionsort(int arr[], int len) {
+    assert(arr != NULL);
+    assert(len > 0);
     for (int i = 0; i < len-1; ++i) {
         int *min = &arr[i];
         for (int j = i; j < len; ++j) {
@@ -50,4 +55,37 @@ selectionsort(int arr[], int len) {
         }
         swap(&arr[i], min);
     }
+}
+
+static void
+mergesort_helper(int arr[], int start, int len, int aux[]) {
+    if (len < 2)
+        return;
+
+    int llen = len/2; int rlen = len-llen;
+    int lstart = start; int rstart = lstart+llen;
+    mergesort_helper(arr, lstart, llen, aux);
+    mergesort_helper(arr, rstart, rlen, aux);
+
+    int lidx = lstart; int ridx = rstart;
+    for (int pos = start; pos < start+len; ++pos) {
+        if (lidx == lstart+llen || arr[lidx] >= arr[ridx]) {
+            aux[pos] = arr[lidx];
+            ++lidx;
+        } else if (ridx == rstart+rlen || arr[lidx] < arr[ridx]) {
+            aux[pos] = arr[ridx];
+            ++ridx;
+        }
+    }
+    for (int pos = start; pos < start+len; ++pos)
+        arr[pos] = aux[pos];
+}
+
+void
+mergesort(int arr[], int len) {
+    assert(arr != NULL);
+    assert(len > 0);
+
+    int aux[len];
+    mergesort_helper(arr, 0, len, aux);
 }
