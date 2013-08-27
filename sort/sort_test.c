@@ -1,4 +1,5 @@
 #include "sort.h"
+#include "../utils/utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,14 +8,6 @@ int* get_array_copy(int arr[], int len) {
     for (int i = 0; i < len; ++i)
         new_array[i] = arr[i];
     return new_array;
-}
-
-void print_array(int arr[], int len) {
-    printf("[");
-    for (int i = 0; i < len; ++i) {
-        printf("%d,", arr[i]);
-    }
-    printf("]");
 }
 
 int main(int argc, char *argv[]) {

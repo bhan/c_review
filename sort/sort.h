@@ -1,3 +1,5 @@
+//#define DEBUG
+
 void
 bubblesort(int arr[], int len);
 void

@@ -1,23 +1,8 @@
 #include "sort.h"
+#include "../utils/utils.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-static void
-swap(int *a, int *b) {
-    int temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-static void
-print_array(int arr[], int len) {
-    printf("[");
-    for (int i = 0; i < len; ++i) {
-        printf("%d,", arr[i]);
-    }
-    printf("]");
-}
 
 void
 bubblesort(int arr[], int len) {
@@ -69,22 +54,49 @@ selectionsort(int arr[], int len) {
 
 static void
 merge(int arr[], int lstart, int llen, int rstart, int rlen, int aux[]) {
+    D printf("merge:");
+    D printf("larr:");
+    D print_array(&arr[lstart], llen);
+    D printf(",rarr:");
+    D print_array(&arr[rstart], rlen);
+    D printf(",lstart:%d,llen:%d,rstart:%d,rlen:%d\n",
+            lstart, llen, rstart, rlen);
     int lidx = lstart; int ridx = rstart;
     for (int i = lstart; i < lstart+llen+rlen; ++i) {
-        if (lidx >= lstart+llen || arr[lidx] >= arr[ridx]) {
-            aux[i] = arr[ridx];
-            ++ridx;
-        } else if (ridx >= rstart+rlen || arr[lidx] < arr[ridx]) {
+        if (lidx < lstart+llen && ridx < rstart+rlen) {
+            // both array indices are valid, so compare values from both arrays
+            if (arr[lidx] >= arr[ridx]) {
+                aux[i] = arr[ridx];
+                ++ridx;
+            } else {
+                aux[i] = arr[lidx];
+                ++lidx;
+            }
+        } else if (ridx >= rstart+rlen) {
+            // right array index out of range, so take from the left array
             aux[i] = arr[lidx];
             ++lidx;
+        } else if (lidx >= lstart+llen) {
+            // left array index out of range, so take from the right array
+            aux[i] = arr[ridx];
+            ++ridx;
         }
     }
     for (int i = lstart; i < lstart+llen+rlen; ++i)
         arr[i] = aux[i];
+
+    D printf("merge:result:");
+    D print_array(&arr[lstart], llen+rlen);
+    D printf("\n");
 }
 
 static void
 mergesort_helper(int arr[], int start, int len, int aux[]) {
+    D printf("mergesort_helper:");
+    D printf("arr:");
+    D print_array(&arr[start], len);
+    D printf(",start:%d,len:%d\n", start, len);
+
     if (len < 2)
         return;
 
@@ -99,6 +111,9 @@ void
 mergesort(int arr[], int len) {
     assert(arr != NULL);
     assert(len > 0);
+    D printf("mergesort:");
+    D print_array(arr, len);
+    D printf(",%d\n", len);
 
     int aux[len];
     mergesort_helper(arr, 0, len, aux);
