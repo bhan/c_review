@@ -1,12 +1,22 @@
 #include "sort.h"
 #include <assert.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 static void
 swap(int *a, int *b) {
     int temp = *a;
     *a = *b;
     *b = temp;
+}
+
+static void
+print_array(int arr[], int len) {
+    printf("[");
+    for (int i = 0; i < len; ++i) {
+        printf("%d,", arr[i]);
+    }
+    printf("]");
 }
 
 void
@@ -58,6 +68,22 @@ selectionsort(int arr[], int len) {
 }
 
 static void
+merge(int arr[], int lstart, int llen, int rstart, int rlen, int aux[]) {
+    int lidx = lstart; int ridx = rstart;
+    for (int i = lstart; i < lstart+llen+rlen; ++i) {
+        if (lidx >= lstart+llen || arr[lidx] >= arr[ridx]) {
+            aux[i] = arr[ridx];
+            ++ridx;
+        } else if (ridx >= rstart+rlen || arr[lidx] < arr[ridx]) {
+            aux[i] = arr[lidx];
+            ++lidx;
+        }
+    }
+    for (int i = lstart; i < lstart+llen+rlen; ++i)
+        arr[i] = aux[i];
+}
+
+static void
 mergesort_helper(int arr[], int start, int len, int aux[]) {
     if (len < 2)
         return;
@@ -66,19 +92,7 @@ mergesort_helper(int arr[], int start, int len, int aux[]) {
     int lstart = start; int rstart = lstart+llen;
     mergesort_helper(arr, lstart, llen, aux);
     mergesort_helper(arr, rstart, rlen, aux);
-
-    int lidx = lstart; int ridx = rstart;
-    for (int pos = start; pos < start+len; ++pos) {
-        if (lidx == lstart+llen || arr[lidx] >= arr[ridx]) {
-            aux[pos] = arr[lidx];
-            ++lidx;
-        } else if (ridx == rstart+rlen || arr[lidx] < arr[ridx]) {
-            aux[pos] = arr[ridx];
-            ++ridx;
-        }
-    }
-    for (int pos = start; pos < start+len; ++pos)
-        arr[pos] = aux[pos];
+    merge(arr, lstart, llen, rstart, rlen, aux);
 }
 
 void
