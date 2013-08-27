@@ -28,12 +28,12 @@ void quicksort(int array[], int begin, int end) {
   int pivot_val = array[left+(right-left)/2];
   //printf("pivot_val:%d\n", pivot_val);
   while (left <= right) {
-    // increment left until there's an element out of place
+    // increment left until there's an element out of place (could hit pivot)
     if (array[left] < pivot_val) {
       ++left;
       continue;
     }
-    // increment right until there's an element out of place
+    // increment right until there's an element out of place (could hit pivot)
     if (array[right] > pivot_val) {
       --right;
       continue;

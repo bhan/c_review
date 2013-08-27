@@ -118,3 +118,30 @@ mergesort(int arr[], int len) {
     int aux[len];
     mergesort_helper(arr, 0, len, aux);
 }
+
+int
+quicksort_partition(int arr[], int len) {
+    int pidx = len/2;
+    int pivot = arr[pidx];
+    swap(&arr[pidx], &arr[len-1]);
+    int swapidx = 0;
+    // rearrange all elements less than pivot to be below an index: swapidx
+    for (int i = 0; i < len-1; ++i) {
+        if (arr[i] < pivot) {
+            swap(&arr[i], &arr[swapidx]);
+            ++swapidx;
+        }
+    }
+    // at this point, all elements < pivot are at slots 0...swapidx-1
+    swap(&arr[swapidx], &arr[len-1]);
+    return swapidx;
+}
+
+void
+quicksort(int arr[], int len) {
+    if (len < 2)
+        return;
+    int pivotIndex = quicksort_partition(arr, len);
+    quicksort(arr, pivotIndex);
+    quicksort(&arr[pivotIndex+1], len-pivotIndex-1);
+}

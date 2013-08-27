@@ -53,4 +53,11 @@ int main(int argc, char *argv[]) {
     print_array(copy, len);
     printf("\n");
     free(copy);
+
+    copy = get_array_copy(arr, len);
+    printf("quicksort: ");
+    quicksort(copy, len);
+    print_array(copy, len);
+    printf("\n");
+    free(copy);
 }
