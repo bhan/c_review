@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 int
-get_places(int num) {
+utils_get_places(int num) {
     if (num == 0)
         return 1;
     int places = 0;

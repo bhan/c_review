@@ -59,7 +59,7 @@ bst_print_helper(struct node *cur, int level, int max_places) {
             printf("| ");
         else printf("|-");
     }
-    int places = get_places(cur->data);
+    int places = utils_get_places(cur->data);
     // pad unused places with '-'
     for (int i = 0; i < max_places-places; ++i)
         printf("-");
@@ -70,6 +70,6 @@ bst_print_helper(struct node *cur, int level, int max_places) {
 
 void bst_print(struct bst *tree) {
     assert(tree != NULL);
-    int max_places = get_places(bst_rmost(tree));
+    int max_places = utils_get_places(bst_rmost(tree));
     bst_print_helper(tree->root, 0, max_places);
 }

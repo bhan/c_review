@@ -6,7 +6,7 @@
 
 // returns number of places (including negative sign) a number takes up
 int
-get_places(int num);
+utils_get_places(int num);
 void
 print_array(int arr[], int len);
 void
