@@ -17,6 +17,7 @@ int main() {
       bst_insert(tree, values[i]);
       assert(bst_is_valid(tree));
   }
+  bst_print(tree);
 
   for (int i = 0; i < len_values; ++i)
       assert(bst_search(tree, values[i]));
