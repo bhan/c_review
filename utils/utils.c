@@ -14,8 +14,8 @@ utils_get_places(int num) {
 }
 
 void
-utils_swap(int *a, int *b) {
-    int temp = *a;
+utils_swap(void **a, void **b) {
+    void *temp = *a;
     *a = *b;
     *b = temp;
 }

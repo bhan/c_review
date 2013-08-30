@@ -10,4 +10,4 @@ utils_get_places(int num);
 void
 print_array(int arr[], int len);
 void
-utils_swap(int *a, int *b);
+utils_swap(void **a, void **b);
