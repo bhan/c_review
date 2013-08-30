@@ -12,7 +12,7 @@ bubblesort(int arr[], int len) {
         int in_order = 1;
         for (int j = 0; j < len-1; j++) {
             if (arr[j+1] < arr[j]) {
-                swap(&arr[j+1], &arr[j]);
+                utils_swap(&arr[j+1], &arr[j]);
                 in_order = 0;
             }
         }
@@ -29,7 +29,7 @@ insertionsort(int arr[], int len) {
         int cur = i+1;
         for (int j = i; j >= 0; --j) {
             if (arr[cur] < arr[j]) {
-                swap(&arr[cur], &arr[j]);
+                utils_swap(&arr[cur], &arr[j]);
                 cur = j;
             } else {
                 break;
@@ -48,7 +48,7 @@ selectionsort(int arr[], int len) {
             if (*min > arr[j])
                 min = &arr[j];
         }
-        swap(&arr[i], min);
+        utils_swap(&arr[i], min);
     }
 }
 
@@ -123,17 +123,17 @@ int
 quicksort_partition(int arr[], int len) {
     int pidx = len/2;
     int pivot = arr[pidx];
-    swap(&arr[pidx], &arr[len-1]);
+    utils_swap(&arr[pidx], &arr[len-1]);
     int swapidx = 0;
     // rearrange all elements less than pivot to be below an index: swapidx
     for (int i = 0; i < len-1; ++i) {
         if (arr[i] < pivot) {
-            swap(&arr[i], &arr[swapidx]);
+            utils_swap(&arr[i], &arr[swapidx]);
             ++swapidx;
         }
     }
     // at this point, all elements < pivot are at slots 0...swapidx-1
-    swap(&arr[swapidx], &arr[len-1]);
+    utils_swap(&arr[swapidx], &arr[len-1]);
     return swapidx;
 }
 

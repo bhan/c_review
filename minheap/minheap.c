@@ -1,13 +1,8 @@
 #include "minheap.h"
+#include "../utils/utils.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-static void swap(int *a, int *b) {
-  int temp = *a;
-  *a = *b;
-  *b = temp;
-}
 
 struct minheap* minheap_init() {
   struct minheap *heap = (struct minheap*)malloc(sizeof(struct minheap));
@@ -60,7 +55,7 @@ int minheap_add(struct minheap *heap, int value) {
   int cur_pos = heap->size-1;
   int par_pos = (cur_pos-1)/2;
   while (heap->values[cur_pos] < heap->values[par_pos] && par_pos >= 0) {
-    swap(&heap->values[cur_pos], &heap->values[par_pos]);
+    utils_swap(&heap->values[cur_pos], &heap->values[par_pos]);
     cur_pos = par_pos;
     par_pos = (par_pos-1)/2;
   }
@@ -97,7 +92,7 @@ int minheap_remove(struct minheap *heap) {
     int swap_pos = ((child1_pos < heap->size && child2_pos >= heap->size) ||
                     (heap->values[child1_pos] < heap->values[child2_pos])) ?
                     child1_pos : child2_pos;
-    swap(&heap->values[cur_pos], &heap->values[swap_pos]);
+    utils_swap(&heap->values[cur_pos], &heap->values[swap_pos]);
     cur_pos = swap_pos;
     child1_pos = cur_pos*2+1;
     child2_pos = child1_pos+1;
