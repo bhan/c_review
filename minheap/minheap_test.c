@@ -1,34 +1,57 @@
 #include "minheap.h"
+#include "../utils/utils.h"
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-int intptr_t_cmp(void *a, void *b) {
+int intptr_t_cmp_asc(void *a, void *b) {
   if ((intptr_t)a > (intptr_t)b) return 1;
   else if ((intptr_t)a < (intptr_t)b) return -1;
   else return 0;
 }
 
-void
-intptr_t_print(void *value) {
-    printf("%"PRIdPTR, value);
+int intptr_t_cmp_dsc(void *a, void *b) {
+  if ((intptr_t)a < (intptr_t)b) return 1;
+  else if ((intptr_t)a > (intptr_t)b) return -1;
+  else return 0;
 }
 
-int main() {
-  intptr_t values[] = {10, 5, 1, 8, 2, 6, 20, 5, 100};
-  int size = sizeof(values)/sizeof(values[0]);
-  struct minheap* heap = minheap_init(&intptr_t_cmp);
-  minheap_check(heap);
-  for (int i = 0; i < size; ++i) {
-    minheap_check(heap);
-    minheap_add(heap, (void*)values[i]);
-    minheap_print(heap, &intptr_t_print);
+void
+intptr_t_print(void *value) {
+    printf("%"PRIdPTR, (intptr_t)value);
+}
+
+int main(int argc, char *argv[]) {
+  if (argc <= 1) {
+    printf("Please provide a list of integers\n");
+    return 1;
   }
-  for (int i = 0; i < size; ++i) {
-    minheap_check(heap);
-    intptr_t_print(minheap_remove(heap));
-    printf("\n");
-    minheap_print(heap, &intptr_t_print);
+  int len = argc-1;
+  intptr_t values[len];
+  for (int i = 0; i < len; ++i)
+    values[i] = (intptr_t)atoi(argv[i+1]);
+
+  printf("input: ");
+  utils_print_array((void**)values, len, &intptr_t_print);
+  printf("\n");
+
+  struct minheap* heap = minheap_init(&intptr_t_cmp_asc, &intptr_t_print);
+  minheap_print(heap);
+  printf("\n");
+  minheap_check(heap);
+  printf("passed minheap_check\n");
+  for (int i = 0; i < len; ++i) {
+    printf("adding "); intptr_t_print((void*)values[i]); printf(" ");
+    minheap_add(heap, (void*)values[i]);
+    minheap_print(heap); printf("\n");
+    minheap_check(heap); printf("passed minheap_check\n");
+  }
+  for (int i = 0; i < len; ++i) {
+    printf("removed ");
+    intptr_t_print(minheap_remove(heap)); printf(" ");
+    minheap_print(heap); printf("\n");
+    minheap_check(heap); printf("passed minheap_check\n");
   }
   minheap_destroy(heap);
 }

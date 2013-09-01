@@ -1,6 +1,15 @@
 #include <math.h>
 #include <stdio.h>
 
+void
+print_array(int arr[], int len) {
+    printf("[");
+    for (int i = 0; i < len; ++i) {
+        printf("%d,", arr[i]);
+    }
+    printf("]");
+}
+
 int
 utils_get_places(int num) {
     if (num == 0)
@@ -21,10 +30,10 @@ utils_swap(void **a, void **b) {
 }
 
 void
-print_array(int arr[], int len) {
-    printf("[");
-    for (int i = 0; i < len; ++i) {
-        printf("%d,", arr[i]);
-    }
-    printf("]");
+utils_print_array(void *arr[], int len, void (*print)(void*)) {
+  printf("[");
+  for (int i = 0; i < len; ++i) {
+    print(arr[i]); printf(",");
+  }
+  printf("]");
 }

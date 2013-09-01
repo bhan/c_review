@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-struct minheap* minheap_init(int (*cmp)(void*, void*)) {
+struct minheap* minheap_init(int (*cmp)(void*, void*),
+                             void (*print)(void*)) {
   assert(cmp != NULL);
   struct minheap *heap = (struct minheap*)malloc(sizeof(struct minheap));
   if (heap == NULL)
@@ -13,6 +14,7 @@ struct minheap* minheap_init(int (*cmp)(void*, void*)) {
   heap->values = NULL;
   heap->capacity = 0;
   heap->cmp = cmp;
+  heap->print = print;
   return heap;
 }
 
@@ -67,6 +69,40 @@ int minheap_add(struct minheap *heap, void *value) {
   return 0;
 }
 
+static inline int
+minheap_get_swap_idx(struct minheap *heap, int cur_idx) {
+  assert(heap != NULL);
+  assert(cur_idx >= 0);
+
+  int l_idx = cur_idx*2+1; // index of left child
+  int r_idx = l_idx+1; // index of right child
+  // swap with the min(left child, right child) if left or right child smaller
+  int swap_idx = -1;
+  if (r_idx < heap->size) {
+    // two children exist
+    if (heap->cmp(heap->values[cur_idx], heap->values[l_idx]) > 0) {
+      // parent is greater than left child, right child possibly smaller still
+      if (heap->cmp(heap->values[l_idx], heap->values[r_idx]) > 0) {
+        // left child is greater than right child, so swap right child
+          swap_idx = r_idx;
+      } else {
+        // left child is not greater than right child, so swap left child
+        swap_idx = l_idx;
+      }
+    } else if (heap->cmp(heap->values[cur_idx], heap->values[r_idx]) > 0) {
+      // parent is greater than right child but not left, so swap right child
+      swap_idx = r_idx;
+    }
+  } else if (l_idx < heap->size) {
+    // only left child exists
+    if (heap->cmp(heap->values[cur_idx], heap->values[l_idx]) > 0) {
+      // parent is greater than left child, so swap left child
+      swap_idx = l_idx;
+    }
+  }
+  return swap_idx;
+}
+
 void *minheap_remove(struct minheap *heap) {
   assert(heap != NULL);
   assert(heap->size > 0);
@@ -78,33 +114,20 @@ void *minheap_remove(struct minheap *heap) {
   // reallocate when too much capacity
   if (heap->size <= heap->capacity/2) {
     int new_capacity = heap->capacity/2;
-    void **new_values = (void**)realloc(heap->values, new_capacity);
+    void **new_values = (void**)realloc(heap->values,
+                                        new_capacity*sizeof(void*));
     if (new_capacity == 0)
       heap->values = NULL;
     else heap->values = new_values;
     heap->capacity = new_capacity;
   }
 
-  int cur_pos = 0;
-  int child1_pos = cur_pos*2+1;
-  int child2_pos = child1_pos+1;
-  while ((child1_pos < heap->size &&
-          heap->cmp(heap->values[cur_pos], heap->values[child1_pos]) == 1) ||
-//          heap->values[cur_pos] > heap->values[child1_pos]) ||
-         (child2_pos < heap->size &&
-          heap->cmp(heap->values[cur_pos], heap->values[child2_pos]) == 1)
-//          heap->values[cur_pos] > heap->values[child2_pos])
-        ) {
-    int swap_pos;
-    if ((child1_pos < heap->size && child2_pos >= heap->size) ||
-        (heap->cmp(heap->values[child1_pos], heap->values[child2_pos]) == -1)) {
-//                    (heap->values[child1_pos] < heap->values[child2_pos])) ?
-      swap_pos = child1_pos;
-    } else swap_pos = child2_pos;
-    utils_swap(&heap->values[cur_pos], &heap->values[swap_pos]);
-    cur_pos = swap_pos;
-    child1_pos = cur_pos*2+1;
-    child2_pos = child1_pos+1;
+  int cur_idx = 0;
+  int swap_idx = minheap_get_swap_idx(heap, cur_idx);
+  while (swap_idx > 0) {
+    utils_swap(&heap->values[cur_idx], &heap->values[swap_idx]);
+    cur_idx = swap_idx;
+    swap_idx = minheap_get_swap_idx(heap, cur_idx);
   }
 
   return min;
@@ -116,18 +139,15 @@ void minheap_check(struct minheap *heap) {
   for (int cur_pos = heap->size-1; cur_pos > 0; --cur_pos) {
     int par_pos = (cur_pos-1)/2;
     assert(heap->cmp(heap->values[cur_pos], heap->values[par_pos]) >= 0);
-//    assert(heap->values[cur_pos] >= heap->values[par_pos]);
   }
 }
 
-void minheap_print(struct minheap *heap, void (*print_func)(void *value)) {
+void minheap_print(struct minheap *heap) {
   assert(heap != NULL);
-  printf("size:%d\n", heap->size);
-  printf("capacity:%d\n", heap->capacity);
   printf("{");
   for (int i = 0; i < heap->size; ++i) {
-    print_func(heap->values[i]);
+    heap->print(heap->values[i]);
     printf(",");
   }
-  printf("}\n");
+  printf("} size:%d capacity:%d", heap->size, heap->capacity);
 }
