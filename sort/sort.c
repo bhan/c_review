@@ -3,6 +3,16 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
+inline void swap(void *a, void *b, size_t n);
+
+void swap(void *a, void *b, size_t n) {
+  char temp[n];
+  memmove(temp, a, n);
+  memmove(a, b, n);
+  memmove(b, temp, n);
+}
 
 void
 bubblesort(int arr[], int len) {
@@ -12,7 +22,7 @@ bubblesort(int arr[], int len) {
         int in_order = 1;
         for (int j = 0; j < len-1; j++) {
             if (arr[j+1] < arr[j]) {
-                utils_swap(&arr[j+1], &arr[j]);
+                swap(&arr[j+1], &arr[j], sizeof(int));
                 in_order = 0;
             }
         }
@@ -29,7 +39,7 @@ insertionsort(int arr[], int len) {
         int cur = i+1;
         for (int j = i; j >= 0; --j) {
             if (arr[cur] < arr[j]) {
-                utils_swap(&arr[cur], &arr[j]);
+                swap(&arr[cur], &arr[j], sizeof(int));
                 cur = j;
             } else {
                 break;
@@ -48,7 +58,7 @@ selectionsort(int arr[], int len) {
             if (*min > arr[j])
                 min = &arr[j];
         }
-        utils_swap(&arr[i], min);
+        swap(&arr[i], min, sizeof(int));
     }
 }
 
@@ -123,17 +133,17 @@ int
 quicksort_partition(int arr[], int len) {
     int pidx = len/2;
     int pivot = arr[pidx];
-    utils_swap(&arr[pidx], &arr[len-1]);
+    swap(&arr[pidx], &arr[len-1], sizeof(int));
     int swapidx = 0;
     // rearrange all elements less than pivot to be below an index: swapidx
     for (int i = 0; i < len-1; ++i) {
         if (arr[i] < pivot) {
-            utils_swap(&arr[i], &arr[swapidx]);
+            swap(&arr[i], &arr[swapidx], sizeof(int));
             ++swapidx;
         }
     }
     // at this point, all elements < pivot are at slots 0...swapidx-1
-    utils_swap(&arr[swapidx], &arr[len-1]);
+    swap(&arr[swapidx], &arr[len-1], sizeof(int));
     return swapidx;
 }
 
