@@ -8,10 +8,7 @@
 #include "../utils/utils.h"
 
 inline static void swap(void *a, void *b, size_t n) {
-  char temp[n];
-  memmove(temp, a, n);
-  memmove(a, b, n);
-  memmove(b, temp, n);
+  char temp[n]; memmove(temp, a, n); memmove(a, b, n); memmove(b, temp, n);
 }
 
 void bubblesort(int arr[], int len) {
@@ -20,8 +17,7 @@ void bubblesort(int arr[], int len) {
     int in_order = 1;
     for (int j = 0; j < len-1; j++) {
       if (arr[j+1] < arr[j]) {
-          swap(&arr[j+1], &arr[j], sizeof(int));
-          in_order = 0;
+        swap(&arr[j+1], &arr[j], sizeof(int)); in_order = 0;
       }
     }
     if (in_order) return;
@@ -34,8 +30,7 @@ void insertionsort(int arr[], int len) {
     int cur = i+1;
     for (int j = i; j >= 0; --j) {
       if (arr[cur] < arr[j]) {
-        swap(&arr[cur], &arr[j], sizeof(int));
-        cur = j;
+        swap(&arr[cur], &arr[j], sizeof(int)); cur = j;
       } else break;
     }
   }
