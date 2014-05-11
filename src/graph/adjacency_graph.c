@@ -210,6 +210,7 @@ struct edge *graph_edge_add(struct graph *g, struct vertex *from,
     ++g->edges_num;
 
     D printf("EXIT graph_edge_add\n");
+    return NULL;
 }
 
 void graph_edge_remove(struct graph *g, struct vertex *from,

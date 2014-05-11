@@ -19,6 +19,6 @@ double average(int count, ...)
 
 int main(void) {
   printf("average:%g\n", average(2, 1.0, 2.0));
-  double (*average_func) () = &average;
+  double (*average_func) (int, ...) = &average;
   printf("average:%g\n", average_func(2, 1.0, 2.0));
 }
